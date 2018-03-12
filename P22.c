@@ -7,8 +7,8 @@
 
 int main (int argc, char *argv[])
 {
-    int    i, j, k, jj, kk, c00, c01, c10, c11;
-    int n = block*(N/block);
+    int    i, j, k, jj, kk, c1, c2, c3, c4;
+    int en = block*(N/block);
     timing_t tstart, tend;
     double    a[N][N],           /* matrix A to be multiplied */
     b[N][N],           /* matrix B to be multiplied */
@@ -29,21 +29,21 @@ int main (int argc, char *argv[])
     
     get_time(&tstart);
     
-    for (kk = 0; kk < n; kk += block) {
-        for (jj = 0; jj < n; jj += block) {
+    for (kk = 0; kk < en; kk += block) {
+        for (jj = 0; jj < en; jj += block) {
             for (i = 0; i < N; i+=2) {
                 for (j = jj; j < jj + block; j+=2) {
-                    c00 = c01 = c10 = c11 = 0;
+                    c1 = c2 = c3 = c4 = 0;
                     for (k=kk; k<kk+block; k++) {
-                        c00 += a[i][k] * b[k][j];
-                        c01 += a[i][k] * b[k][j+1];
-                        c10 += a[i+1][k] * b[k][j];
-                        c11 += a[i+1][k] * b[k][j+1];
+                        c1 += a[i][k] * b[k][j];
+                        c2 += a[i][k] * b[k][j+1];
+                        c3 += a[i+1][k] * b[k][j];
+                        c4 += a[i+1][k] * b[k][j+1];
                     }
-                    c[i][j] += c00;
-                    c[i][j+1] += c01;
-                    c[i+1][j] += c10;
-                    c[i+1][j+1] += c11;
+                    c[i][j] += c1;
+                    c[i][j+1] += c2;
+                    c[i+1][j] += c3;
+                    c[i+1][j+1] += c4;
                 }
             }
         }
