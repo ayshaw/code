@@ -3,7 +3,7 @@
 #include <time.h>
 #include "timing.h"
 #include "openacc.h"
-#define N 100                 /* matrix size */
+#define N 1500                 /* matrix size */
 
 int main (int argc, char *argv[]) 
 {
