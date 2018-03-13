@@ -26,7 +26,7 @@ void jacobi(int nsweeps, int n, double* u, double* f)
     
 
     for (sweep = 0; sweep < nsweeps; sweep += 2) {
-#pragma omp parallel
+#pragma omp parallel num_threads(128)
         {
 #pragma omp for
         
