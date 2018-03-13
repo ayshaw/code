@@ -5,7 +5,7 @@
 #include "timing.h"
 #include "omp.h"
 #define ncells 100000000
-#define processors 2
+#define processors 3
 /* --
  * Do nsweeps sweeps of Jacobi iteration on a 1D Poisson problem
  *
