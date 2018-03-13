@@ -62,7 +62,7 @@ int main (int argc, char *argv[])
     }
     printf("******************************************************\n");
     printf ("Done.\n");
-    printf("Elapsed time: %g s\n", timespec_diff(tstart, tend));
+  
     
 }
 
