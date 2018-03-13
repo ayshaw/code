@@ -30,13 +30,13 @@ void jacobi(int nsweeps, int n, double *restrict u, double *restrict f)
         
         /* Old data in u; new data in utmp */
 #pragma acc data copyin(f[0:n],u[0:n],utmp[0:n]), copyout(u[0:n])
-#pragma acc kernels loop independent
+#pragma acc kernels loop independent vector(1024)
         for (i = 1; i < n; ++i)
             utmp[i] = (u[i-1] + u[i+1] + h2*f[i])/2;
         
         /* Old data in utmp; new data in u */
 #pragma acc data copyin(f[0:n],u[0:n],utmp[0:n]), copyout(u[0:n])
-#pragma acc kernels loop independent
+#pragma acc kernels loop independent vector(1024)
         for (i = 1; i < n; ++i)
             u[i] = (utmp[i-1] + utmp[i+1] + h2*f[i])/2;
     }
@@ -69,7 +69,7 @@ int main(int argc, char** argv)
     
     /* Process arguments */
     n      = (argc > 1) ? atoi(argv[1]) : 100;
-    nsteps = (argc > 2) ? atoi(argv[2]) : 100;
+    nsteps = (argc > 2) ? atoi(argv[2]) : 1000000;
     fname  = (argc > 3) ? argv[3] : NULL;
     h      = 1.0/n;
     
