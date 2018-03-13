@@ -142,7 +142,7 @@ private ( i, j, k, x, x1, x2, y, y1, y2 )
                 }
                 else
                 {
-                    c = ( int ) ( 255.0 * sqrt ( sqrt ( sqrt (
+                    c = ( int ) ( 255.0 * sqrt( sqrt( sqrt(
                                                               ( ( double ) ( count[i][j] ) / ( double ) ( count_max ) ) ) ) ) );
                     r[i][j] = 3 * c / 5;
                     g[i][j] = 3 * c / 5;
