@@ -35,7 +35,6 @@ get_time(&tstart);
 #pragma acc parallel loop
   for (i=0; i<N; i++)    
     {
-#pragma acc parallel loop
     for(j=0; j<N; j++)
       for (k=0; k<N; k++)
         c[i][j] += a[i][k] * b[k][j];
