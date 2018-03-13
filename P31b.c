@@ -4,7 +4,7 @@
 #include "openacc.h"
 #include "timing.h"
 #define vl 1024
-#define ncells 10000000
+#define ncells 100000000
 /* --
  * Do nsweeps sweeps of Jacobi iteration on a 1D Poisson problem
  *
