@@ -6,7 +6,7 @@
 # include <time.h>
 
 # include <omp.h>
-
+#define nt 2
 int main ( void );
 int i4_min ( int i1, int i2 );
 void timestamp ( void );
@@ -99,7 +99,8 @@ int main ( void )
      */
 # pragma omp parallel \
 shared ( b, count, count_max, g, r, x_max, x_min, y_max, y_min ) \
-private ( i, j, k, x, x1, x2, y, y1, y2 )
+private ( i, j, k, x, x1, x2, y, y1, y2 ) \
+num_threads(nt)
     {
 # pragma omp for 
         
