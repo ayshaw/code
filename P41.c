@@ -24,14 +24,14 @@ void jacobi(int nsweeps, int n, double* u, double* f)
     utmp[0] = u[0];
     utmp[n] = u[n];
     
-#pragma omp parallel for
+
     for (sweep = 0; sweep < nsweeps; sweep += 2) {
-#pragma omp for
+#pragma omp parallel for
         
         /* Old data in u; new data in utmp */
         for (i = 1; i < n; ++i)
             utmp[i] = (u[i-1] + u[i+1] + h2*f[i])/2;
-#pragma omp for
+#pragma omp parallel for
         /* Old data in utmp; new data in u */
         for (i = 1; i < n; ++i)
             u[i] = (utmp[i-1] + utmp[i+1] + h2*f[i])/2;
