@@ -48,9 +48,21 @@ int main (int argc, char *argv[])
             }
         }
     }
-    printf("%g",c[0][0]);
     get_time(&tend);
-    
     printf("Elapsed time: %g s\n", timespec_diff(tstart, tend));
+    
+    printf("*****************************************************\n");
+    
+    printf("Result Matrix:\n");
+    for (i=0; i<N; i++)
+    {
+        for (j=0; j<N; j++)
+            printf("%6.2f   ", c[i][j]);
+        printf("\n");
+    }
+    printf("******************************************************\n");
+    printf ("Done.\n");
+    printf("Elapsed time: %g s\n", timespec_diff(tstart, tend));
+    
 }
 
