@@ -5,6 +5,7 @@
 #include "timing.h"
 #include "omp.h"
 #define ncells 100000000
+#define processors 2
 /* --
  * Do nsweeps sweeps of Jacobi iteration on a 1D Poisson problem
  *
@@ -28,7 +29,7 @@ void jacobi(int nsweeps, int n, double* u, double* f)
 
     for (sweep = 0; sweep < nsweeps; sweep += 2) {
         int r=omp_get_max_threads();
-#pragma omp parallel num_threads(r)
+#pragma omp parallel num_threads(processors)
         {
             
 #pragma omp for
