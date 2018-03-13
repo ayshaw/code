@@ -3,7 +3,7 @@
 #include <time.h>
 #include "timing.h"
 #include "openacc.h"
-#define N 1500                 /* matrix size */
+#define N 100                 /* matrix size */
 
 int main (int argc, char *argv[]) 
 {
@@ -30,7 +30,9 @@ double	a[N][N],           /* matrix A to be multiplied */
       c[i][j]= 0;
 
 get_time(&tstart);
+
 #pragma acc data copyin(a,b,c) copyout(c)
+#pragma acc kernel independent vector(32)
     {
 #pragma acc parallel loop
   for (i=0; i<N; i++)    
