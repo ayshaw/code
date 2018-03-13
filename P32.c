@@ -33,15 +33,13 @@ get_time(&tstart);
 
 #pragma acc data copyin(a,b,c) copyout(c)
 #pragma acc kernels loop independent vector(32)
-    {
-#pragma acc parallel loop
   for (i=0; i<N; i++)    
     {
     for(j=0; j<N; j++)
       for (k=0; k<N; k++)
         c[i][j] += a[i][k] * b[k][j];
     }
-    }
+    
 get_time(&tend);
 
 
