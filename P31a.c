@@ -63,7 +63,7 @@ int main(int argc, char** argv)
     char* fname;
 
     /* Process arguments */
-    n      = (argc > 1) ? atoi(argv[1]) : 100;
+    n      = (argc > 1) ? atoi(argv[1]) : 1000000;
     nsteps = (argc > 2) ? atoi(argv[2]) : 100;
     fname  = (argc > 3) ? argv[3] : NULL;
     h      = 1.0/n;
