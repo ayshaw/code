@@ -1,9 +1,4 @@
-//
-//  P42.c
-//  
-//
-//  Created by Sherman on 3/5/18.
-//
+
 
 # include <stdlib.h>
 # include <stdio.h>
