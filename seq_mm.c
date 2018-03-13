@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "timing.h"
-#define N 1500                 /* matrix size */
+#define N 100               /* matrix size */
 
 int main (int argc, char *argv[]) 
 {
