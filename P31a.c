@@ -3,7 +3,7 @@
 #include <string.h>
 #include "openacc.h"
 #include "timing.h"
-
+#define vl 1024
 /* --
  * Do nsweeps sweeps of Jacobi iteration on a 1D Poisson problem
  * 
@@ -25,7 +25,7 @@ void jacobi(int nsweeps, int n, double* u, double* f)
     utmp[n] = u[n];
 
 #pragma acc data copyin(f[0:n],u[0:n],utmp[0:n]), copyout(u[0:n])
-#pragma acc kernels loop independent vector(64)
+#pragma acc kernels loop independent vector(vl)
     for (sweep = 0; sweep < nsweeps; sweep += 2) {
 
         /* Old data in u; new data in utmp */

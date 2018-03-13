@@ -13,19 +13,19 @@ double	a[N][N],           /* matrix A to be multiplied */
 	b[N][N],           /* matrix B to be multiplied */
 	c[N][N];           /* result matrix C */
 
-#pragma acc parallel loop
+
   for (i=0; i<N; i++)
-    #pragma acc loop
+   
     for (j=0; j<N; j++)
       a[i][j]= i+j;
-#pragma acc parallel loop
+
   for (i=0; i<N; i++)
-    #pragma acc loop
+  
     for (j=0; j<N; j++)
       b[i][j]= i*j;
-#pragma acc parallel loop
+
   for (i=0; i<N; i++)
-    #pragma acc loop
+   
     for (j=0; j<N; j++)
       c[i][j]= 0;
 
@@ -37,7 +37,6 @@ get_time(&tstart);
     {
 #pragma acc parallel loop
     for(j=0; j<N; j++)
-        #pragma acc loop reduction (+:c)
       for (k=0; k<N; k++)
         c[i][j] += a[i][k] * b[k][j];
     }
