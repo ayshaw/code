@@ -24,7 +24,7 @@ void jacobi(int nsweeps, int n, double* u, double* f)
     utmp[0] = u[0];
     utmp[n] = u[n];
 
-#pragma acc loop
+
     for (sweep = 0; sweep < nsweeps; sweep += 2) {
 
         /* Old data in u; new data in utmp */
