@@ -27,8 +27,10 @@ void jacobi(int nsweeps, int n, double* u, double* f)
     
 
     for (sweep = 0; sweep < nsweeps; sweep += 2) {
-#pragma omp parallel
+        r=omp_get_max_threads();
+#pragma omp parallel num_threads=r  
         {
+            
 #pragma omp for
         
         /* Old data in u; new data in utmp */
