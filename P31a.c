@@ -4,6 +4,7 @@
 #include "openacc.h"
 #include "timing.h"
 #define vl 1024
+#define ncells 100000000
 /* --
  * Do nsweeps sweeps of Jacobi iteration on a 1D Poisson problem
  * 
@@ -63,7 +64,7 @@ int main(int argc, char** argv)
     char* fname;
 
     /* Process arguments */
-    n      = (argc > 1) ? atoi(argv[1]) : 100000000;
+    n      = (argc > 1) ? atoi(argv[1]) : ncells;
     nsteps = (argc > 2) ? atoi(argv[2]) : 100;
     fname  = (argc > 3) ? argv[3] : NULL;
     h      = 1.0/n;
