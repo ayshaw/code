@@ -28,7 +28,7 @@ double	a[N][N],           /* matrix A to be multiplied */
    
     for (j=0; j<N; j++)
       c[i][j]= 0;
-
+double tmp
 get_time(&tstart);
 
 #pragma acc data copyin(a,b) copy(c)
@@ -37,9 +37,12 @@ get_time(&tstart);
   for (i=0; i<N; i++)    {
 #pragma acc loop independent
       for(j=0; j<N; j++) {
+          tmp=0.0f;
 #pragma acc loop reduction(+:c)
-      for (k=0; k<N; k++)
-        c[i][j] += a[i][k] * b[k][j];
+          for (k=0; k<N; k++){
+        tmp += a[i][k] * b[k][j];
+          }
+          c[i][j]=tmp;
     }
   }
 get_time(&tend);
