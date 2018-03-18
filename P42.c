@@ -6,7 +6,7 @@
 # include <time.h>
 
 # include <omp.h>
-#define nt 128
+#define nt 1
 int main ( void );
 int i4_min ( int i1, int i2 );
 void timestamp ( void );
@@ -103,7 +103,7 @@ private ( i, j, k, x, x1, x2, y, y1, y2 ) \
 num_threads(nt)\
 
     {
-# pragma omp for schedule(dynamic)
+# pragma omp for
         
         for ( i = 0; i < m; i++ )
         {
