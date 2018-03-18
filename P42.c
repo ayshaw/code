@@ -6,7 +6,7 @@
 # include <time.h>
 
 # include <omp.h>
-#define nt 4
+#define nt 8
 int main ( void );
 int i4_min ( int i1, int i2 );
 void timestamp ( void );
