@@ -31,7 +31,7 @@ double	a[N][N],           /* matrix A to be multiplied */
 
 get_time(&tstart);
 
-#pragma acc data copyin(a,b,c) copyout(c)
+#pragma acc data copyin(a[N][N],b[N][N],c[N][N]), copyout(c[N][N])
 #pragma acc kernels loop independent vector(32)
   for (i=0; i<N; i++)    
     {
