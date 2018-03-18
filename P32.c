@@ -13,17 +13,19 @@ double	a[N][N],           /* matrix A to be multiplied */
 	b[N][N],/* matrix B to be multiplied */
     tmp,
 	c[N][N];           /* result matrix C */
-
+#pragma acc data copy(a)
 #pragma acc kernels
   for (i=0; i<N; i++)
    
     for (j=0; j<N; j++)
       a[i][j]= i+j;
+    #pragma acc data copy(b)
 #pragma acc kernels
   for (i=0; i<N; i++)
   
     for (j=0; j<N; j++)
       b[i][j]= i*j;
+    #pragma acc data copy(c)
 #pragma acc kernels
   for (i=0; i<N; i++)
    
