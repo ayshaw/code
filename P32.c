@@ -28,7 +28,7 @@ double	a[N][N],           /* matrix A to be multiplied */
    
     for (j=0; j<N; j++)
       c[i][j]= 0;
-    double tmp;
+
 get_time(&tstart);
 
 #pragma acc data copyin(a,b) copy(c)
