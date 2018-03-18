@@ -11,7 +11,7 @@ int	i, j, k;
 timing_t tstart, tend;
 double	a[N][N],           /* matrix A to be multiplied */
 	b[N][N],/* matrix B to be multiplied */
-    tmp
+    tmp;
 	c[N][N];           /* result matrix C */
 
 
