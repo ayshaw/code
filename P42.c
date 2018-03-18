@@ -103,7 +103,7 @@ private ( i, j, k, x, x1, x2, y, y1, y2 ) \
 num_threads(nt)\
 
     {
-# pragma omp for
+# pragma omp for schedule(dynamic)
         
         for ( i = 0; i < m; i++ )
         {
