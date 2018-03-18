@@ -38,7 +38,7 @@ get_time(&tstart);
   for (i=0; i<N; i++)    {
 #pragma acc loop independent
       for(j=0; j<N; j++) {
-          tmp=0.0;
+          tmp=0.0f;
 #pragma acc loop reduction(+:tmp)
           for (k=0; k<N; k++){
         tmp += a[i][k] * b[k][j];
