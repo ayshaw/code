@@ -10,7 +10,8 @@ int main (int argc, char *argv[])
 int	i, j, k;
 timing_t tstart, tend;
 double	a[N][N],           /* matrix A to be multiplied */
-	b[N][N],           /* matrix B to be multiplied */
+	b[N][N],/* matrix B to be multiplied */
+    tmp
 	c[N][N];           /* result matrix C */
 
 
@@ -37,7 +38,7 @@ get_time(&tstart);
   for (i=0; i<N; i++)    {
 #pragma acc loop independent
       for(j=0; j<N; j++) {
-          int tmp=0.0f;
+          tmp=0.0;
 #pragma acc loop reduction(+:tmp)
           for (k=0; k<N; k++){
         tmp += a[i][k] * b[k][j];
