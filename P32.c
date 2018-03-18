@@ -48,7 +48,7 @@ get_time(&tstart);
 get_time(&tend);
 
 
-
+/*
 
   printf("*****************************************************\n");
 
@@ -61,6 +61,7 @@ get_time(&tend);
   }
   printf("******************************************************\n");
   printf ("Done.\n");
+ */
 printf("Elapsed time: %g s\n", timespec_diff(tstart, tend));
 }
 
