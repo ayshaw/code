@@ -43,7 +43,7 @@ get_time(&tstart);
 get_time(&tend);
 
 
-   printf("Elapsed time: %g s\n", timespec_diff(tstart, tend));
+
 
   printf("*****************************************************\n");
 
