@@ -30,7 +30,7 @@ double	a[N][N],           /* matrix A to be multiplied */
     for (j=0; j<N; j++)
       c[i][j]= 0;
 
-get_time(&tstart);
+
 
 #pragma acc data copyin(a,b) copy(c)
 #pragma acc kernels
@@ -46,7 +46,7 @@ get_time(&tstart);
           c[i][j]=tmp;
     }
   }
-get_time(&tend);
+
 
 
 
@@ -62,6 +62,6 @@ get_time(&tend);
   }
   printf("******************************************************\n");
   printf ("Done.\n");
-printf("Elapsed time: %g s\n", timespec_diff(tstart, tend));
+//printf("Elapsed time: %g s\n", timespec_diff(tstart, tend));
 }
 
