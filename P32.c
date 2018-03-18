@@ -14,17 +14,17 @@ double	a[N][N],           /* matrix A to be multiplied */
     tmp,
 	c[N][N];           /* result matrix C */
 
-
+#pragma acc kernels
   for (i=0; i<N; i++)
    
     for (j=0; j<N; j++)
       a[i][j]= i+j;
-
+#pragma acc kernels
   for (i=0; i<N; i++)
   
     for (j=0; j<N; j++)
       b[i][j]= i*j;
-
+#pragma acc kernels
   for (i=0; i<N; i++)
    
     for (j=0; j<N; j++)
