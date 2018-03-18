@@ -30,13 +30,12 @@ double	a[N][N],           /* matrix A to be multiplied */
     for (j=0; j<N; j++)
       c[i][j]= 0;
 
-
+get_time(&tstart);
 
 #pragma acc data copyin(a,b) copy(c)
-#pragma acc kernels
-#pragma acc loop independent
+#pragma acc kernels loop independent vectors(32)
   for (i=0; i<N; i++)    {
-#pragma acc loop independent
+
       for(j=0; j<N; j++) {
           tmp=0.0f;
 #pragma acc loop reduction(+:tmp)
@@ -46,7 +45,7 @@ double	a[N][N],           /* matrix A to be multiplied */
           c[i][j]=tmp;
     }
   }
-
+get_time(&tend);
 
 
 
@@ -62,6 +61,6 @@ double	a[N][N],           /* matrix A to be multiplied */
   }
   printf("******************************************************\n");
   printf ("Done.\n");
-//printf("Elapsed time: %g s\n", timespec_diff(tstart, tend));
+printf("Elapsed time: %g s\n", timespec_diff(tstart, tend));
 }
 
