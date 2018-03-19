@@ -2,63 +2,58 @@
 #include <stdlib.h>
 #include <time.h>
 #include "timing.h"
-#define N 1500                 /* matrix size */
+#define N 1500               /* matrix size */
 
-int main (int argc, char *argv[])
+int main (int argc, char *argv[]) 
 {
-    int i, j, k;
-    timing_t tstart, tend;
-    double    a[N][N],           /* matrix A to be multiplied */
-    b[N][N],           /* matrix B to be multiplied */
-    c[N][N];           /* result matrix C */
-    
-    
-    for (i=0; i<N; i++)
-        for (j=0; j<N; j++)
-            a[i][j]= i+j;
-    
-    for (i=0; i<N; i++)
-        for (j=0; j<N; j++)
-            b[i][j]= i*j;
-    
-    for (i=0; i<N; i++)
-        for (j=0; j<N; j++)
-            c[i][j]= 0.0;
-    int bsize=25;
-    int en = bsize*(N/bsize);
-    int kk, jj;
-    double sum;
-    
-    get_time(&tstart);
-    for (kk=0;kk<en;kk+=bsize){
-        for (jj=0;jj<en;jj+=bsize){
-            for (i=0;i<N;i++){
-                for (j=jj;j<jj+bsize;j++){
-                    sum=c[i][j];
-                    for (k=kk;k<kk+bsize;k++){
-                        sum+=a[i][k]*b[k][j];
-                    }
-                    c[i][j]=sum;
-                }
-            }
-        }
-    }
-    get_time(&tend);
-    
-    
-    printf("Elapsed time: %g s\n", timespec_diff(tstart, tend));
-    
-    printf("*****************************************************\n");
-    
-    printf("Result Matrix:\n");
-    for (i=0; i<N; i++)
+int	i, j, k;
+timing_t tstart, tend;
+double	a[N][N],           /* matrix A to be multiplied */
+	b[N][N],           /* matrix B to be multiplied */
+	c[N][N];           /* result matrix C */
+
+
+  for (i=0; i<N; i++)
+    for (j=0; j<N; j++)
+      a[i][j]= i+j;
+
+  for (i=0; i<N; i++)
+    for (j=0; j<N; j++)
+      b[i][j]= i*j;
+
+  for (i=0; i<N; i++)
+    for (j=0; j<N; j++)
+      c[i][j]= 0;
+
+get_time(&tstart);
+
+  for (i=0; i<N; i+=2)    
     {
-        for (j=0; j<N; j++)
-            printf("%6.2f   ", c[i][j]);
-        printf("\n");
+        for(j=0; j<N; j+=2) {
+        for (k=0; k<N; k++){
+          c[i][j] += a[i][k]*b[k][j];
+        c[i+1][j] += a[i+1][k]*b[k][j];
+        c[i][j+1] += a[i][k]*b[k][j+1];
+        c[i+1][j+1] += a[i+1][k]*b[k][j+1];
     }
-    printf("******************************************************\n");
-    printf ("Done.\n");
-    printf("Elapsed time: %g s\n", timespec_diff(tstart, tend));
+    }
+    }
+get_time(&tend);
+
+
+   printf("Elapsed time: %g s\n", timespec_diff(tstart, tend));
+
+  printf("*****************************************************\n");
+
+  printf("Result Matrix:\n");
+  for (i=0; i<N; i++)
+  {
+    for (j=0; j<N; j++) 
+      printf("%6.2f   ", c[i][j]);
+    printf("\n"); 
+  }
+  printf("******************************************************\n");
+  printf ("Done.\n");
+printf("Elapsed time: %g s\n", timespec_diff(tstart, tend));
 }
 
