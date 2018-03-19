@@ -24,7 +24,7 @@ int main (int argc, char *argv[])
     for (i=0; i<N; i++)
         for (j=0; j<N; j++)
             c[i][j]= 0.0;
-    int bsize=15;
+    int bsize=25;
     int en = bsize*(N/bsize);
     int kk, jj;
     double sum;
