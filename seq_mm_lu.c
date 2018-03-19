@@ -31,7 +31,7 @@ get_time(&tstart);
     {
     for(j=0; j<N; j++)       
       for (k=0; k<N; k++)
-          c[][j] += a[i][k] * b[k][j];
+          c[i][j] += a[i][k] * b[k][j];
         c[i+1][j] += a[i+1][k] * b[k][j];
         c[i][j+1] += a[i,k] * b[k,j+1];
         c[i+1][j+1] += a[i+1][k] * b[k][j+1];
