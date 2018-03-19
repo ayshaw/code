@@ -3,7 +3,7 @@
 #include <string.h>
 #include <mpi.h>
 #include <omp.h>
-#define nt 2
+#define nt 1
 
 /* --
  * Exchange ghost cell data with neighboring processors
