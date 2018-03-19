@@ -3,7 +3,7 @@
 #include <string.h>
 #include <mpi.h>
 #include <omp.h>
-
+#define nt 2
 
 /* --
  * Exchange ghost cell data with neighboring processors
@@ -73,23 +73,23 @@ void jacobi(int nsweeps, int n, double* u, double* f, double h2,
         ghost_exchange(u, n, rank, size);
         utmp[0] = u[0];
         utmp[n] = u[n];
-        
+#pragma omp parallel num_threads(nt){
         /* Sweep */
-        #pragma omp parallel for private(i)
+        #pragma omp for
         for (i = 1; i < n; ++i)
             utmp[i] = (u[i-1] + u[i+1] + h2*f[i])/2;
-        
+    }
         /* Exchange ghost cells */
         ghost_exchange(utmp, n, rank, size);
         u[0] = utmp[0];
         u[n] = utmp[n];
-        
+#pragma omp parallel num_threads(nt){
         /* Old data in utmp; new data in u */
-        #pragma omp parallel for private(i)
+        #pragma omp parallel for
         for (i = 1; i < n; ++i)
             u[i] = (utmp[i-1] + utmp[i+1] + h2*f[i])/2;
     }
-    
+}
     free(utmp);
 }
 
