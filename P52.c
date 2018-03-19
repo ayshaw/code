@@ -73,7 +73,8 @@ void jacobi(int nsweeps, int n, double* u, double* f, double h2,
         ghost_exchange(u, n, rank, size);
         utmp[0] = u[0];
         utmp[n] = u[n];
-#pragma omp parallel num_threads(nt){
+#pragma omp parallel num_threads(nt)
+        {
         /* Sweep */
         #pragma omp for
         for (i = 1; i < n; ++i)
@@ -83,9 +84,10 @@ void jacobi(int nsweeps, int n, double* u, double* f, double h2,
         ghost_exchange(utmp, n, rank, size);
         u[0] = utmp[0];
         u[n] = utmp[n];
-#pragma omp parallel num_threads(nt){
+#pragma omp parallel num_threads(nt)
+        {
         /* Old data in utmp; new data in u */
-        #pragma omp parallel for
+        #pragma omp for
         for (i = 1; i < n; ++i)
             u[i] = (utmp[i-1] + utmp[i+1] + h2*f[i])/2;
     }
