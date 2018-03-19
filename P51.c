@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <mpi.h>
-#define ncells 100000000
+#define ncells 10000000
 
 /* --
  * Exchange ghost cell data with neighboring processors
