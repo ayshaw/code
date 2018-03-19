@@ -27,9 +27,9 @@ double	a[N][N],           /* matrix A to be multiplied */
 
 get_time(&tstart);
 
-  for (i=0; i<N; i++)    
+  for (i=0; i<N; i+=2)    
     {
-        for(j=0; j<N; j++) {
+        for(j=0; j<N; j+=2) {
         for (k=0; k<N; k++){
           c[i][j] += a[i][k]*b[k][j];
         c[i+1][j] += a[i+1][k]*b[k][j];
