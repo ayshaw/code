@@ -3,7 +3,7 @@
 #include <time.h>
 #include "timing.h"
 #define N 1500                /* matrix size */
-#define block 15
+#define block 25
 
 int main (int argc, char *argv[])
 {
