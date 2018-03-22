@@ -11,7 +11,7 @@
 void ghost_exchange(double* u, int n, int rank, int size)
 {
     int lt;
-    int right_nbr;
+    int rt;
     MPI_Status status;
     
     if (size == 1)
@@ -20,18 +20,18 @@ void ghost_exchange(double* u, int n, int rank, int size)
     /* YOUR SOLUTION HERE */
     lt = rank + 1;
     if (lt >= size) lt = MPI_PROC_NULL;
-    right_nbr = rank - 1;
-    if (right_nbr < 0) right_nbr = MPI_PROC_NULL;
+    rt = rank - 1;
+    if (rt < 0) rt = MPI_PROC_NULL;
     
     if ((rank % 2) == 0) {
         /* exchange left */
         MPI_Sendrecv(&u[n/size], 1, MPI_DOUBLE, lt, 0,
-                     &u[n/size+1], 1, MPI_DOUBLE, left_nbr, 0, MPI_COMM_WORLD, &status);
+                     &u[n/size+1], 1, MPI_DOUBLE, lt, 0, MPI_COMM_WORLD, &status);
     }
     else {
         /* exchange right */
-        MPI_Sendrecv(&u[1], 1, MPI_DOUBLE, right_nbr, 0,
-                     &u[0], 1, MPI_DOUBLE, right_nbr, 0, MPI_COMM_WORLD, &status);
+        MPI_Sendrecv(&u[1], 1, MPI_DOUBLE, rt, 0,
+                     &u[0], 1, MPI_DOUBLE, rt, 0, MPI_COMM_WORLD, &status);
     }
     
     /* Do the second set of exchanges */
@@ -42,8 +42,8 @@ void ghost_exchange(double* u, int n, int rank, int size)
     }
     else {
         /* exchange right */
-        MPI_Sendrecv(&u[1], 1, MPI_DOUBLE, right_nbr, 1,
-                     &u[0], 1, MPI_DOUBLE, right_nbr, 1, MPI_COMM_WORLD, &status);
+        MPI_Sendrecv(&u[1], 1, MPI_DOUBLE, rt, 1,
+                     &u[0], 1, MPI_DOUBLE, rt, 1, MPI_COMM_WORLD, &status);
     }
     
 }
@@ -143,7 +143,7 @@ int main(int argc, char** argv)
     char* fname;
     int rank, size;
     int ioffset, nper, nloc;
-    int left_nbr, right_nbr;
+    int lt, rt;
     
     /* Initialize MPI and get rank and size */
     MPI_Init(&argc, &argv);
