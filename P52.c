@@ -3,47 +3,47 @@
 #include <string.h>
 #include <mpi.h>
 #include <omp.h>
-#define ncells 100000000
-#define nt 1
+#define nt 2
+
 /* --
  * Exchange ghost cell data with neighboring processors
  */
 void ghost_exchange(double* u, int n, int rank, int size)
 {
-    int lt;
-    int rt;
+    int left_nbr;
+    int right_nbr;
     MPI_Status status;
     
     if (size == 1)
         return;
     
     /* YOUR SOLUTION HERE */
-    lt = rank + 1;
-    if (lt >= size) lt = MPI_PROC_NULL;
-    rt = rank - 1;
-    if (rt < 0) rt = MPI_PROC_NULL;
-    /*first exchanges*/
+    left_nbr = rank + 1;
+    if (left_nbr >= size) left_nbr = MPI_PROC_NULL;
+    right_nbr = rank - 1;
+    if (right_nbr < 0) right_nbr = MPI_PROC_NULL;
+    
     if ((rank % 2) == 0) {
-        /* left */
-        MPI_Sendrecv(&u[n/size], 1, MPI_DOUBLE, lt, 0,
-                     &u[n/size+1], 1, MPI_DOUBLE, lt, 0, MPI_COMM_WORLD, &status);
+        /* exchange left */
+        MPI_Sendrecv(&u[n/size], 1, MPI_DOUBLE, left_nbr, 0,
+                     &u[n/size+1], 1, MPI_DOUBLE, left_nbr, 0, MPI_COMM_WORLD, &status);
     }
     else {
-        /* right */
-        MPI_Sendrecv(&u[1], 1, MPI_DOUBLE, rt, 0,
-                     &u[0], 1, MPI_DOUBLE, rt, 0, MPI_COMM_WORLD, &status);
+        /* exchange right */
+        MPI_Sendrecv(&u[1], 1, MPI_DOUBLE, right_nbr, 0,
+                     &u[0], 1, MPI_DOUBLE, right_nbr, 0, MPI_COMM_WORLD, &status);
     }
     
-    /* second exchanges */
+    /* Do the second set of exchanges */
     if ((rank % 2) == 1) {
-        /* left */
-        MPI_Sendrecv(&u[n/size], 1, MPI_DOUBLE, lt, 1,
-                     &u[n/size+1], 1, MPI_DOUBLE, lt, 1, MPI_COMM_WORLD, &status);
+        /* exchange left */
+        MPI_Sendrecv(&u[n/size], 1, MPI_DOUBLE, left_nbr, 1,
+                     &u[n/size+1], 1, MPI_DOUBLE, left_nbr, 1, MPI_COMM_WORLD, &status);
     }
     else {
-        /* right */
-        MPI_Sendrecv(&u[1], 1, MPI_DOUBLE, rt, 1,
-                     &u[0], 1, MPI_DOUBLE, rt, 1, MPI_COMM_WORLD, &status);
+        /* exchange right */
+        MPI_Sendrecv(&u[1], 1, MPI_DOUBLE, right_nbr, 1,
+                     &u[0], 1, MPI_DOUBLE, right_nbr, 1, MPI_COMM_WORLD, &status);
     }
     
 }
@@ -67,8 +67,9 @@ void jacobi(int nsweeps, int n, double* u, double* f, double h2,
     utmp[0] = u[0];
     utmp[n] = u[n];
     
+    
     for (sweep = 0; sweep < nsweeps; sweep += 2) {
- #pragma omp parallel num_threads(nt)
+#pragma omp parallel num_threads(nt)
         /* Exchange ghost cells */
         ghost_exchange(u, n, rank, size);
         utmp[0] = u[0];
@@ -88,11 +89,11 @@ void jacobi(int nsweeps, int n, double* u, double* f, double h2,
 #pragma omp for
         for (i = 1; i < n; ++i)
             u[i] = (utmp[i-1] + utmp[i+1] + h2*f[i])/2;
+        
     }
-    
     free(utmp);
+    
 }
-
 
 void write_solution(int n, int nloc, double* uloc, const char* fname,
                     int rank, int size)
@@ -143,7 +144,7 @@ int main(int argc, char** argv)
     char* fname;
     int rank, size;
     int ioffset, nper, nloc;
-    int lt, rt;
+    int left_nbr, right_nbr;
     
     /* Initialize MPI and get rank and size */
     MPI_Init(&argc, &argv);
@@ -151,7 +152,7 @@ int main(int argc, char** argv)
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     
     /* Process non-MPI arguments */
-    n      = (argc > 1) ? atoi(argv[1]) : ncells;
+    n      = (argc > 1) ? atoi(argv[1]) : 100000000;
     nsteps = (argc > 2) ? atoi(argv[2]) : 100;
     fname  = (argc > 3) ? argv[3] : NULL;
     h      = 1.0/n;
