@@ -3,51 +3,47 @@
 #include <string.h>
 #include <mpi.h>
 #include <omp.h>
-#define nt 1
+
 
 /* --
  * Exchange ghost cell data with neighboring processors
  */
 void ghost_exchange(double* u, int n, int rank, int size)
 {
-    int lt;
-    int rt;
+    int left_nbr;
+    int right_nbr;
     MPI_Status status;
     
     if (size == 1)
         return;
     
     /* YOUR SOLUTION HERE */
-    lt = rank + 1;
-    if (lt >= size) lt = MPI_PROC_NULL;
-    rt = rank - 1;
-    if (rt< 0) rt = MPI_PROC_NULL;
+    left_nbr = rank + 1;
+    if (left_nbr >= size) left_nbr = MPI_PROC_NULL;
+    right_nbr = rank - 1;
+    if (right_nbr < 0) right_nbr = MPI_PROC_NULL;
     
     if ((rank % 2) == 0) {
-        /* exchange left (i.e. P0 sends entry 3 of its local vector to P1 and
-         receives entry 4) */
-        MPI_Sendrecv(&u[n/size], 1, MPI_DOUBLE, lt, 0,
-                     &u[n/size+1], 1, MPI_DOUBLE, lt, 0, MPI_COMM_WORLD, &status);
+        /* exchange left */
+        MPI_Sendrecv(&u[n/size], 1, MPI_DOUBLE, left_nbr, 0,
+                     &u[n/size+1], 1, MPI_DOUBLE, left_nbr, 0, MPI_COMM_WORLD, &status);
     }
     else {
-        /* exchange right (i.e. P1 sends entry 1 of its local vector to P0 and
-         receives entry 0) */
-        MPI_Sendrecv(&u[1], 1, MPI_DOUBLE, rt, 0,
-                     &u[0], 1, MPI_DOUBLE, rt, 0, MPI_COMM_WORLD, &status);
+        /* exchange right */
+        MPI_Sendrecv(&u[1], 1, MPI_DOUBLE, right_nbr, 0,
+                     &u[0], 1, MPI_DOUBLE, right_nbr, 0, MPI_COMM_WORLD, &status);
     }
     
     /* Do the second set of exchanges */
     if ((rank % 2) == 1) {
-        /* exchange left (i.e. P1 sends entry 3 of its local vector to P2 and
-         receives entry 4)*/
-        MPI_Sendrecv(&u[n/size], 1, MPI_DOUBLE, lt, 1,
-                     &u[n/size+1], 1, MPI_DOUBLE, lt, 1, MPI_COMM_WORLD, &status);
+        /* exchange left */
+        MPI_Sendrecv(&u[n/size], 1, MPI_DOUBLE, left_nbr, 1,
+                     &u[n/size+1], 1, MPI_DOUBLE, left_nbr, 1, MPI_COMM_WORLD, &status);
     }
     else {
-        /* exchange right (i.e. P2 sends entry 1 of its local vector to P1 and
-         receives entry 0)*/
-        MPI_Sendrecv(&u[1], 1, MPI_DOUBLE, rt, 1,
-                     &u[0], 1, MPI_DOUBLE, rt, 1, MPI_COMM_WORLD, &status);
+        /* exchange right */
+        MPI_Sendrecv(&u[1], 1, MPI_DOUBLE, right_nbr, 1,
+                     &u[0], 1, MPI_DOUBLE, right_nbr, 1, MPI_COMM_WORLD, &status);
     }
     
 }
@@ -70,34 +66,33 @@ void jacobi(int nsweeps, int n, double* u, double* f, double h2,
     
     utmp[0] = u[0];
     utmp[n] = u[n];
-
-
+    
     for (sweep = 0; sweep < nsweeps; sweep += 2) {
-#pragma omp parallel num_threads(nt)
+        
         /* Exchange ghost cells */
         ghost_exchange(u, n, rank, size);
         utmp[0] = u[0];
         utmp[n] = u[n];
-
+        
         /* Sweep */
-        #pragma omp for
+#pragma omp parallel for private(i)
         for (i = 1; i < n; ++i)
             utmp[i] = (u[i-1] + u[i+1] + h2*f[i])/2;
-    
+        
         /* Exchange ghost cells */
         ghost_exchange(utmp, n, rank, size);
         u[0] = utmp[0];
         u[n] = utmp[n];
         
         /* Old data in utmp; new data in u */
-        #pragma omp for
+#pragma omp parallel for private(i)
         for (i = 1; i < n; ++i)
             u[i] = (utmp[i-1] + utmp[i+1] + h2*f[i])/2;
+    }
     
-}
     free(utmp);
-
 }
+
 
 void write_solution(int n, int nloc, double* uloc, const char* fname,
                     int rank, int size)
@@ -148,7 +143,7 @@ int main(int argc, char** argv)
     char* fname;
     int rank, size;
     int ioffset, nper, nloc;
-    int lt, rt;
+    int left_nbr, right_nbr;
     
     /* Initialize MPI and get rank and size */
     MPI_Init(&argc, &argv);
@@ -156,7 +151,7 @@ int main(int argc, char** argv)
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     
     /* Process non-MPI arguments */
-    n      = (argc > 1) ? atoi(argv[1]) : 100000000;
+    n      = (argc > 1) ? atoi(argv[1]) : 100;
     nsteps = (argc > 2) ? atoi(argv[2]) : 100;
     fname  = (argc > 3) ? argv[3] : NULL;
     h      = 1.0/n;
