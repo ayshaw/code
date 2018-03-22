@@ -22,26 +22,26 @@ void ghost_exchange(double* u, int n, int rank, int size)
     if (lt >= size) lt = MPI_PROC_NULL;
     rt = rank - 1;
     if (rt < 0) rt = MPI_PROC_NULL;
-    
+    /*first exchanges*/
     if ((rank % 2) == 0) {
-        /* exchange left */
+        /* left */
         MPI_Sendrecv(&u[n/size], 1, MPI_DOUBLE, lt, 0,
                      &u[n/size+1], 1, MPI_DOUBLE, lt, 0, MPI_COMM_WORLD, &status);
     }
     else {
-        /* exchange right */
+        /* right */
         MPI_Sendrecv(&u[1], 1, MPI_DOUBLE, rt, 0,
                      &u[0], 1, MPI_DOUBLE, rt, 0, MPI_COMM_WORLD, &status);
     }
     
-    /* Do the second set of exchanges */
+    /* second exchanges */
     if ((rank % 2) == 1) {
-        /* exchange left */
+        /* left */
         MPI_Sendrecv(&u[n/size], 1, MPI_DOUBLE, lt, 1,
                      &u[n/size+1], 1, MPI_DOUBLE, lt, 1, MPI_COMM_WORLD, &status);
     }
     else {
-        /* exchange right */
+        /* right */
         MPI_Sendrecv(&u[1], 1, MPI_DOUBLE, rt, 1,
                      &u[0], 1, MPI_DOUBLE, rt, 1, MPI_COMM_WORLD, &status);
     }
