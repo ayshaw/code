@@ -34,7 +34,7 @@ void ghost_exchange(double* u, int n, int rank, int size)
                      &u[0], 1, MPI_DOUBLE, right_nbr, 0, MPI_COMM_WORLD, &status);
     }
     
-    /* Do the second set of exchanges */
+    /* second exchanges */
     if ((rank % 2) == 1) {
         /* exchange left */
         MPI_Sendrecv(&u[n/size], 1, MPI_DOUBLE, left_nbr, 1,
@@ -69,28 +69,31 @@ void jacobi(int nsweeps, int n, double* u, double* f, double h2,
     
     
     for (sweep = 0; sweep < nsweeps; sweep += 2) {
-#pragma omp parallel num_threads(nt)
+
         /* Exchange ghost cells */
         ghost_exchange(u, n, rank, size);
         utmp[0] = u[0];
         utmp[n] = u[n];
         
         /* Sweep */
+#pragma omp parallel num_threads(nt){
 #pragma omp for
         for (i = 1; i < n; ++i)
             utmp[i] = (u[i-1] + u[i+1] + h2*f[i])/2;
-        
+    }
         /* Exchange ghost cells */
         ghost_exchange(utmp, n, rank, size);
         u[0] = utmp[0];
         u[n] = utmp[n];
         
         /* Old data in utmp; new data in u */
+#pragma omp parallel num_threads(nt){
 #pragma omp for
         for (i = 1; i < n; ++i)
             u[i] = (utmp[i-1] + utmp[i+1] + h2*f[i])/2;
-        
-    }
+}
+        }
+    
     free(utmp);
     
 }

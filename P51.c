@@ -33,7 +33,7 @@ void ghost_exchange(double* u, int n, int rank, int size)
                      &u[0], 1, MPI_DOUBLE, right_nbr, 0, MPI_COMM_WORLD, &status);
     }
     
-    /* Do the second set of exchanges */
+    /* second exchanges */
     if ((rank % 2) == 1) {
         /* exchange left */
         MPI_Sendrecv(&u[n/size], 1, MPI_DOUBLE, left_nbr, 1,
@@ -193,3 +193,4 @@ int main(int argc, char** argv)
     MPI_Finalize();
     return 0;
 }
+
