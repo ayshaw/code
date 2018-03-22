@@ -3,8 +3,8 @@
 #include <string.h>
 #include <mpi.h>
 #include <omp.h>
-
-
+#define ncells 100000000
+#define nt 1
 /* --
  * Exchange ghost cell data with neighboring processors
  */
@@ -151,7 +151,7 @@ int main(int argc, char** argv)
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     
     /* Process non-MPI arguments */
-    n      = (argc > 1) ? atoi(argv[1]) : 100;
+    n      = (argc > 1) ? atoi(argv[1]) : ncells;
     nsteps = (argc > 2) ? atoi(argv[2]) : 100;
     fname  = (argc > 3) ? argv[3] : NULL;
     h      = 1.0/n;
